@@ -1,0 +1,23 @@
+<h1>Noticias</h1>
+
+<div class="row">
+  <% @publications.each do |publication| %>
+    <div class="col-md-4 mb-4">
+      <div class="card">
+        <img src="<%= publication.image %>" class="card-img-top" alt="<%= publication.title %>">
+        <div class="card-body">
+          <h5 class="card-title"><%= publication.title %></h5>
+          <p class="card-text"><%= truncate(publication.description, length: 100) %></p>
+          <p class="text-muted">Autor: <%= publication.user.name %></p>
+        </div>
+        <div class="card-footer">
+          <%= link_to "Mostrar publicación", publication %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<%= link_to "Nueva publicación", new_publication_path %>
+
+

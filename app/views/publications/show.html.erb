@@ -1,0 +1,48 @@
+<!-- Mostrar la publicación -->
+<%= render @publication %>
+
+<!-- Opciones para editar y borrar la publicación -->
+<div class="button-container">
+  <% if user_signed_in? %>
+    <% if current_user.id == @publication.user_id %>
+      <%= link_to "Editar publicación", edit_publication_path(@publication), class: 'action-button' %>
+      <%= button_to "Borrar publicación", @publication, method: :delete, class: 'action-button' %>
+    <% end %>
+  <% end %>
+  <%= link_to "Volver a publicaciones", publications_path, class: 'action-button' %>
+</div>
+
+
+<!-- Formulario para nuevos comentarios -->
+<% if user_signed_in? %>
+  
+  <%= form_with(model: [ @publication, @publication.comments.build ]) do |form| %>
+    <div class="comentariosfield">
+    <h2>Agregar Comentario</h2>
+      <%= form.label :content, "Comentario", class: "label-inline" %>
+      <%= form.text_area :content, placeholder: "Escribe tu comentario aquí...", class: "large-textarea" %>
+    </div>
+    <div class="actions">
+      <%= form.submit "Publicar Comentario", class: "button-style" %>
+    </div>
+  <% end %>
+<% end %>
+
+<!-- Lista de comentarios existentes -->
+
+<div class="list-group">
+<h2 class="mb-4">Comentarios</h2>
+  <% @publication.comments.each do |comment| %>
+    <div class="list-group-item list-group-item-action">
+      <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1"><%= comment.user ? comment.user.name : "Usuario desconocido" %></h5>
+
+        <% if user_signed_in? && (current_user.id == comment.user_id || current_user.admin?) %>
+          <%= link_to 'Eliminar', [comment.publication, comment], method: :delete, data: { confirm: '¿Estás seguro?' }, class: "btn btn-danger btn-sm" %>
+        <% end %>
+      </div>
+      <p class="mb-1"><%= comment.content %></p>
+    </div>
+  <% end %>
+</div>
+
